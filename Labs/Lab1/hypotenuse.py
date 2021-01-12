@@ -2,23 +2,63 @@ import math
 
 
 def CalculateHypotenuse(a, b):
+    """Calculate hypotenuse.
+
+    The function calculates hypotenuse of a right-angled triangle.
+
+    :param a: a positive number
+    :param b: a positive number
+    :return: a value of the hypotenuse
+    """
     hypotenuse = math.sqrt(a ** 2 + b ** 2)
     return hypotenuse
 
 
 def Sum(a, b):
+    """Do summation.
+
+    The function performs summation using two given values.
+
+    :param a: a positive number
+    :param b: a positive number
+    :return: the result of the summation
+    """
     return a + b
 
 
 def Multiply(a, b):
+    """Do multiplication.
+
+    The function performs multiplication using two given values.
+
+    :param a: a positive number
+    :param b: a positive number
+    :return: the result of the multiplication
+    """
     return a * b
 
 
 def Divide(a, b):
+    """Do division.
+
+    The function performs division using two given values.
+
+    :param a: a positive number
+    :param b: a positive number
+    :return: the result of the division
+    """
     return a / b
 
 
 def Subtract(a, b):
+    """Do subtraction.
+
+    The function performs subtraction using two given values.
+
+    :param a: a positive number
+    :param b: a positive number
+    :return: the result of the subtraction
+    """
     return a - b
 
 
