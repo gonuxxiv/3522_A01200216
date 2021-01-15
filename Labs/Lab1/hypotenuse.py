@@ -1,7 +1,7 @@
 import math
 
 
-def CalculateHypotenuse(a, b):
+def calculate_hypotenuse(a: int, b: int) -> float:
     """Calculate hypotenuse.
 
     The function calculates hypotenuse of a right-angled triangle.
@@ -14,7 +14,7 @@ def CalculateHypotenuse(a, b):
     return hypotenuse
 
 
-def Sum(a, b):
+def sum(a: int, b: int) -> int:
     """Do summation.
 
     The function performs summation using two given values.
@@ -26,7 +26,7 @@ def Sum(a, b):
     return a + b
 
 
-def Multiply(a, b):
+def multiply(a: int, b: int) -> int:
     """Do multiplication.
 
     The function performs multiplication using two given values.
@@ -38,7 +38,7 @@ def Multiply(a, b):
     return a * b
 
 
-def Divide(a, b):
+def divide(a: int, b: int) -> float:
     """Do division.
 
     The function performs division using two given values.
@@ -50,7 +50,7 @@ def Divide(a, b):
     return a / b
 
 
-def Subtract(a, b):
+def subtract(a: int, b: int) -> int:
     """Do subtraction.
 
     The function performs subtraction using two given values.
@@ -76,17 +76,17 @@ if __name__ == "__main__":
         a = int(input("Length of a: "))
         b = int(input("Length of b: "))
         if user_input == 1:
-            hypotenuse = CalculateHypotenuse(a, b)
+            hypotenuse = calculate_hypotenuse(a, b)
             print(f"Hypotenuse = {hypotenuse}")
         elif user_input == 2:
-            result = Sum(a, b)
+            result = sum(a, b)
             print(f"The sum = {result}")
         elif user_input == 3:
-            result = Subtract(a, b)
+            result = subtract(a, b)
             print(f"The subtraction = {result}")
         elif user_input == 4:
-            result = Multiply(a, b)
+            result = multiply(a, b)
             print(f"The multiplication = {result}")
         elif user_input == 5:
-            result = Divide(a, b)
+            result = divide(a, b)
             print(f"The division = {result}")
