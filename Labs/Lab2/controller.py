@@ -10,6 +10,10 @@ class Controller:
     asteroid_list = []
 
     def __init__(self):
+        """Generate asteroids.
+
+        The function stores 100 Asteroid objects to the list.
+        """
         for i in range(100):
             radius = random.randrange(1, 4)
             position = Vector(random.randint(0, 100), random.randint(0, 100), random.randint(0, 100))
@@ -17,7 +21,13 @@ class Controller:
             asteroid = Asteroid(radius, position, velocity)
             self.asteroid_list.append(asteroid)
 
-    def simulate(self, seconds):
+    def simulate(self, seconds: int):
+        """Simulate asteroids.
+
+        The method simulates asteroids moving in the space.
+
+        :param seconds: a positive integer
+        """
         current_time = time.time()
         seconds_to_wait = int(current_time + 1) - current_time
         start_time = current_time + seconds_to_wait
