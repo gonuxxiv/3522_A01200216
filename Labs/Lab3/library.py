@@ -9,44 +9,8 @@ class Library:
     The Library consists of a list of books and provides an
     interface for users to check out, return and find books.
     """
-
-    def __init__(self, book_list: Catalogue):
-        """
-        Initialize the library with a list of books.
-        :param book_list: a sequence of book objects.
-        """
-        self._catalogue = book_list
-
-    def check_out(self, call_number):
-        """
-        Check out an book with the given call number from the library.
-        :param call_number: a string
-        :precondition call_number: a unique identifier
-        """
-        library_book = self._retrieve_book_by_call_number(call_number)
-        if library_book.check_availability():
-            status = self.reduce_book_count(call_number)
-            if status:
-                print("Checkout complete!")
-            else:
-                print(f"Could not find book with call number {call_number}"
-                      f". Checkout failed.")
-        else:
-            print(f"No copies left for call number {call_number}"
-                  f". Checkout failed.")
-
-    def return_book(self, call_number):
-        """
-        Return an book with the given call number from the library.
-        :param call_number: a string
-        :precondition call_number: a unique identifier
-        """
-        status = self.increment_book_count(call_number)
-        if status:
-            print("book returned successfully!")
-        else:
-            print(f"Could not find book with call number {call_number}"
-                  f". Return failed.")
+    def __init__(self, catalogue):
+        self.catalogue = catalogue
 
     def display_library_menu(self):
         """
@@ -57,35 +21,35 @@ class Library:
         while user_input != 7:
             print("\nWelcome to the Library!")
             print("-----------------------")
-            print("1. Display all books")
-            print("2. Check Out a book")
-            print("3. Return a book")
-            print("4. Find a book")
-            print("5. Add a book")
-            print("6. Remove a book")
+            print("1. Display all items")
+            print("2. Check Out an item")
+            print("3. Return an item")
+            print("4. Find an item")
+            print("5. Add an item")
+            print("6. Remove an item")
             print("7. Quit")
             string_input = input("Please enter your choice (1-7)")
 
             #handle user pressing only enter in menu
-            if string_input == '':
+            if(string_input == ''):
                 continue
 
             user_input = int(string_input)
 
             if user_input == 1:
-                self.display_available_books()
+                self.catalogue.display_available_items()
                 user_input = input("Press Enter to continue")
             elif user_input == 2:
-                call_number = input("Enter the call number of the book"
+                call_number = input("Enter the call number of the item"
                                     " you wish to check out.")
-                self.check_out(call_number)
+                self.catalogue.check_out(call_number)
             elif user_input == 3:
-                call_number = input("Enter the call number of the book"
+                call_number = input("Enter the call number of the item"
                                     " you wish to return.")
-                self.return_book(call_number)
+                self.catalogue.return_item(call_number)
             elif user_input == 4:
-                input_title = input("Enter the title of the book:")
-                found_titles = self._catalogue.find_items(input_title)
+                input_title = input("Enter the title of the item:")
+                found_titles = self.catalogue.find_books(input_title)
                 print("We found the following:")
                 if len(found_titles) > 0:
                     for title in found_titles:
@@ -94,11 +58,11 @@ class Library:
                     print("Sorry! We found nothing with that title")
 
             elif user_input == 5:
-                self._catalogue.add_item()
+                self.catalogue.add_item()
 
             elif user_input == 6:
-                call_number = input("Enter the call number of the book")
-                self._catalogue.remove_item(call_number)
+                call_number = input("Enter the call number of the item")
+                self.catalogue.remove_item(call_number)
 
             elif user_input == 7:
                 pass
@@ -107,61 +71,6 @@ class Library:
                       " number from 1 - 7.")
 
         print("Thank you for visiting the Library.")
-
-    def _retrieve_book_by_call_number(self, call_number):
-        """
-        A private method that encapsulates the retrieval of an book with
-        the given call number from the library.
-        :param call_number: a string
-        :return: book object if found, None otherwise
-        """
-        found_book = None
-        for library_book in self._catalogue.book_list:
-            if library_book.call_number == call_number:
-                found_book = library_book
-                break
-        return found_book
-
-    def display_available_books(self):
-        """
-        Display all the books in the library.
-        """
-        print("Books List")
-        print("--------------", end="\n\n")
-        for library_book in self._catalogue.book_list:
-            print(library_book)
-
-    def reduce_book_count(self, call_number):
-        """
-        Decrement the book count for an book with the given call number
-        in the library.
-        :param call_number: a string
-        :precondition call_number: a unique identifier
-        :return: True if the book was found and count decremented, false
-        otherwise.
-        """
-        library_book = self._retrieve_book_by_call_number(call_number)
-        if library_book:
-            library_book.decrement_number_of_copies()
-            return True
-        else:
-            return False
-
-    def increment_book_count(self, call_number):
-        """
-        Increment the book count for an book with the given call number
-        in the library.
-        :param call_number: a string
-        :precondition call_number: a unique identifier
-        :return: True if the book was found and count incremented, false
-        otherwise.
-        """
-        library_book = self._retrieve_book_by_call_number(call_number)
-        if library_book:
-            library_book.increment_number_of_copies()
-            return True
-        else:
-            return False
 
 
 def generate_test_books():
