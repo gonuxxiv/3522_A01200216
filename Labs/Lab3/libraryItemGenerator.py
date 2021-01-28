@@ -29,13 +29,13 @@ class LibraryItemGenerator:
             user_input = int(string_input)
 
             if user_input == 1:
-                book = LibraryItemGenerator.add_book()
+                book = LibraryItemGenerator._add_book()
                 return book
             elif user_input == 2:
-                dvd = LibraryItemGenerator.add_DVD()
+                dvd = LibraryItemGenerator._add_DVD()
                 return dvd
             elif user_input == 3:
-                journal = LibraryItemGenerator.add_journal()
+                journal = LibraryItemGenerator._add_journal()
                 return journal
             elif user_input == 4:
                 pass
@@ -44,7 +44,7 @@ class LibraryItemGenerator:
                       " number from 1 - 4.")
 
     @staticmethod
-    def add_book():
+    def _add_book():
         """
         Add a brand new book to the library with a unique call number.
         """
@@ -58,7 +58,7 @@ class LibraryItemGenerator:
         return new_book
 
     @staticmethod
-    def add_DVD():
+    def _add_DVD():
         """
         Add a brand new DVD to the library with a unique call number.
         """
@@ -73,7 +73,7 @@ class LibraryItemGenerator:
         return new_dvd
 
     @staticmethod
-    def add_journal():
+    def _add_journal():
         """
         Add a brand new journal to the library with a unique call number.
         """

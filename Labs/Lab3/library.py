@@ -10,8 +10,8 @@ class Library:
     The Library consists of a list of books, dvds, and journals and provides an
     interface for users to check out, return and find items.
     """
-    def __init__(self, catalogue):
-        self.catalogue = catalogue
+    def __init__(self, item_catalogue):
+        self.item_catalogue = item_catalogue
 
     def display_library_menu(self):
         """
@@ -38,26 +38,26 @@ class Library:
             user_input = int(string_input)
 
             if user_input == 1:
-                self.catalogue.display_available_items()
+                self.item_catalogue.display_available_items()
                 user_input = input("Press Enter to continue")
             elif user_input == 2:
                 call_number = input("Enter the call number of the item"
                                     " you wish to check out.")
-                self.catalogue.check_out(call_number)
+                self.item_catalogue.check_out(call_number)
             elif user_input == 3:
                 call_number = input("Enter the call number of the item"
                                     " you wish to return.")
-                self.catalogue.return_item(call_number)
+                self.item_catalogue.return_item(call_number)
             elif user_input == 4:
                 input_title = input("Enter the title of the item:")
-                self.catalogue.find_items(input_title)
+                self.item_catalogue.find_items(input_title)
 
             elif user_input == 5:
-                self.catalogue.add_item()
+                self.item_catalogue.add_item()
 
             elif user_input == 6:
                 call_number = input("Enter the call number of the item")
-                self.catalogue.remove_item(call_number)
+                self.item_catalogue.remove_item(call_number)
 
             elif user_input == 7:
                 pass
