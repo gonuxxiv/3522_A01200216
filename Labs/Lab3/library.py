@@ -1,13 +1,14 @@
 """ This module houses the library"""
 from Labs.Lab3.book import Book
 from Labs.Lab3.catalogue import Catalogue
-import difflib
+from Labs.Lab3.dvd import DVD
+from Labs.Lab3.journal import Journal
 
 
 class Library:
     """
-    The Library consists of a list of books and provides an
-    interface for users to check out, return and find books.
+    The Library consists of a list of books, dvds, and journals and provides an
+    interface for users to check out, return and find items.
     """
     def __init__(self, catalogue):
         self.catalogue = catalogue
@@ -15,7 +16,7 @@ class Library:
     def display_library_menu(self):
         """
         Display the library menu allowing the user to either access the
-        list of books, check out, return, find, add, remove a book.
+        list of items, check out, return, find, add, remove an item.
         """
         user_input = None
         while user_input != 7:
@@ -49,13 +50,7 @@ class Library:
                 self.catalogue.return_item(call_number)
             elif user_input == 4:
                 input_title = input("Enter the title of the item:")
-                found_titles = self.catalogue.find_books(input_title)
-                print("We found the following:")
-                if len(found_titles) > 0:
-                    for title in found_titles:
-                        print(title)
-                else:
-                    print("Sorry! We found nothing with that title")
+                self.catalogue.find_items(input_title)
 
             elif user_input == 5:
                 self.catalogue.add_item()
@@ -73,26 +68,28 @@ class Library:
         print("Thank you for visiting the Library.")
 
 
-def generate_test_books():
+def generate_test_items():
     """
-    Return a list of books with dummy data.
+    Return a list of items with dummy data.
     :return: a list
     """
-    book_list = [
+    item_list = [
         Book("100.200.300", "Harry Potter 1", 2, "J K Rowling"),
         Book("999.224.854", "Harry Potter 2", 5, "J K Rowling"),
         Book("631.495.302", "Harry Potter 3", 4, "J K Rowling"),
-        Book("123.02.204", "The Cat in the Hat", 1, "Dr. Seuss")
+        Book("123.02.204", "The Cat in the Hat", 1, "Dr. Seuss"),
+        Journal("432.12.432", "Can Apes Speak?", 2, "Dr. Johnson", 5, "Penguin"),
+        DVD("777.77.777", "The Avengers", 3, "2012/04/11", 1)
     ]
-    return book_list
+    return item_list
 
 
 def main():
     """
     Creates a library with dummy data and prompts the user for input.
     """
-    book_list = generate_test_books()
-    catalogue = Catalogue(book_list)
+    item_list = generate_test_items()
+    catalogue = Catalogue(item_list)
     my_epic_library = Library(catalogue)
     my_epic_library.display_library_menu()
 

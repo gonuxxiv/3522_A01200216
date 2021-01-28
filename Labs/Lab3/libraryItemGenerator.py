@@ -31,7 +31,6 @@ class LibraryItemGenerator:
             elif user_input == 3:
                 journal = LibraryItemGenerator.add_journal()
                 return journal
-                return journal
             elif user_input == 4:
                 pass
             else:

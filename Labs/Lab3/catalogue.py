@@ -1,15 +1,12 @@
-import abc
 import difflib
-
-from Labs.Lab3.book import Book
 from Labs.Lab3.libraryItemGenerator import LibraryItemGenerator
 
 
-class Catalogue(abc.ABC):
+class Catalogue:
     def __init__(self, item_list):
         """
-        Intialize the library with a list of books.
-        :param item_list: a sequence of book objects.
+        Initialize the catalogue of items.
+        :param item_list: a sequence of item objects.
         """
         self._item_list = item_list
 
@@ -58,18 +55,30 @@ class Catalogue(abc.ABC):
                 break
         return found_item
 
-    def find_books(self, title):
+    def find_items(self, title):
         """
         Find books with the same and similar title.
         :param title: a string
         :return: a list of titles.
         """
         title_list = []
-        for library_book in self._item_list:
-            title_list.append(library_book.get_title())
+        for library_item in self._item_list:
+            if title == library_item.get_title():
+                print("Found an item!")
+                print(library_item)
+                return
+            else:
+                title_list.append(library_item.get_title())
+
         results = difflib.get_close_matches(title, title_list,
                                             cutoff=0.5)
-        return results
+
+        if len(results) > 0:
+            print("We found the following:")
+            for title in results:
+                print(title)
+        else:
+            print("Sorry! We found nothing with that title")
 
     def add_item(self):
         """
