@@ -4,9 +4,15 @@ from Labs.Lab3.journal import Journal
 
 
 class LibraryItemGenerator:
-
+    """
+    Provide user with a list of library item types and do specific operation for specific object.
+    """
     @staticmethod
     def add_item():
+        """
+        Prompts user for the type of the item to instantiate and return it.
+        :return: an object
+        """
         user_input = None
         while user_input != 4:
             print("\nWhat is the item type to add?")
@@ -54,7 +60,7 @@ class LibraryItemGenerator:
     @staticmethod
     def add_DVD():
         """
-        Add a brand new book to the library with a unique call number.
+        Add a brand new DVD to the library with a unique call number.
         """
         call_number = input("Enter Call Number: ")
         title = input("Enter title: ")
@@ -69,7 +75,7 @@ class LibraryItemGenerator:
     @staticmethod
     def add_journal():
         """
-        Add a brand new book to the library with a unique call number.
+        Add a brand new journal to the library with a unique call number.
         """
         call_number = input("Enter Call Number: ")
         title = input("Enter title: ")

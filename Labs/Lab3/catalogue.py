@@ -3,6 +3,9 @@ from Labs.Lab3.libraryItemGenerator import LibraryItemGenerator
 
 
 class Catalogue:
+    """
+    Catalogue holds list of items and perform the library operations.
+    """
     def __init__(self, item_list):
         """
         Initialize the catalogue of items.
@@ -12,7 +15,7 @@ class Catalogue:
 
     def check_out(self, call_number):
         """
-        Check out an book with the given call number from the library.
+        Check out an item with the given call number from the library.
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
@@ -30,7 +33,7 @@ class Catalogue:
 
     def return_item(self, call_number):
         """
-        Return an book with the given call number from the library.
+        Return an item with the given call number from the library.
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
@@ -43,7 +46,7 @@ class Catalogue:
 
     def _retrieve_item_by_call_number(self, call_number):
         """
-        A private method that encapsulates the retrieval of an book with
+        A private method that encapsulates the retrieval of an item with
         the given call number from the library.
         :param call_number: a string
         :return: book object if found, None otherwise
@@ -57,7 +60,7 @@ class Catalogue:
 
     def find_items(self, title):
         """
-        Find books with the same and similar title.
+        Find items with the same and similar title.
         :param title: a string
         :return: a list of titles.
         """
@@ -82,7 +85,7 @@ class Catalogue:
 
     def add_item(self):
         """
-        Add a brand new book to the library with a unique call number.
+        Add a brand new item to the library with a unique call number.
         """
         new_item = LibraryItemGenerator.add_item()
 
@@ -98,7 +101,7 @@ class Catalogue:
 
     def remove_item(self, call_number):
         """
-        Remove an existing book from the library
+        Remove an existing item from the library
         :param call_number: a string
         :precondition call_number: a unique identifier
         """
@@ -112,7 +115,7 @@ class Catalogue:
 
     def display_available_items(self):
         """
-        Display all the books in the library.
+        Display all the items in the library.
         """
         print("Items List")
         print("--------------", end="\n\n")
@@ -121,11 +124,11 @@ class Catalogue:
 
     def reduce_item_count(self, call_number):
         """
-        Decrement the book count for an book with the given call number
+        Decrement the item count for an item with the given call number
         in the library.
         :param call_number: a string
         :precondition call_number: a unique identifier
-        :return: True if the book was found and count decremented, false
+        :return: True if the item was found and count decremented, false
         otherwise.
         """
         library_item = self._retrieve_item_by_call_number(call_number)
@@ -137,11 +140,11 @@ class Catalogue:
 
     def increment_item_count(self, call_number):
         """
-        Increment the book count for an book with the given call number
+        Increment the item count for an item with the given call number
         in the library.
         :param call_number: a string
         :precondition call_number: a unique identifier
-        :return: True if the book was found and count incremented, false
+        :return: True if the item was found and count incremented, false
         otherwise.
         """
         library_item = self._retrieve_item_by_call_number(call_number)

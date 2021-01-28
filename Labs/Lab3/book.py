@@ -6,7 +6,6 @@ class Book(Item):
     Represents a single book in a library which is identified through
     it's call number.
     """
-
     def __init__(self, call_num, title, num_copies, author):
         """
         :param call_num: a string
@@ -20,6 +19,10 @@ class Book(Item):
         self._author = author
 
     def __str__(self):
+        """
+        Print the object.
+        :return: a description of the instance in a formatted string
+        """
         return f"---- Book: {self.get_title()} ----\n" \
                f"Call Number: {self.call_number}\n" \
                f"Number of Copies: {self._num_copies}\n" \
