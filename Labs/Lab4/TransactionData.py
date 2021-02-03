@@ -12,11 +12,14 @@ class TransactionData:
 
     def print_transaction_history(self):
         order = 1
-        for transaction in self.transaction_history:
-            print("Transaction " + str(order) + ":")
-            print(transaction)
-            order += 1
-            print("")
+        if len(self.transaction_history) == 0:
+            print("No transaction recorded yet.")
+        else:
+            for transaction in self.transaction_history:
+                print("Transaction " + str(order) + ":")
+                print(transaction)
+                order += 1
+                print("")
 
     def record_transaction(self, amount, budget_category, purchased_at, user):
         if self.check_budget(amount, budget_category, user):
@@ -36,6 +39,7 @@ class TransactionData:
         user_budgets = user.get_budgets()
         if budget_category in user_budgets:
             if (user_budgets.get(budget_category) - amount) < 0:
+                print("\nAmount exceeds the budget limit :(")
                 return False
             else:
                 return True
