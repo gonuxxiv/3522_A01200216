@@ -5,9 +5,19 @@ from pathlib import Path
 
 
 class FileHandler:
-
+    """
+    Process file loading and file writing.
+    """
     @staticmethod
-    def load_data(path, file_extension: FileExtensions):
+    def load_data(path: str, file_extension: FileExtensions):
+        """Load a file.
+
+        The function loads a file of two different extensions: .txt and .json.
+
+        :param path: string
+        :param file_extension: FileExtensions enum object
+        :return: dictionary if the file is json, string if the file is in txt
+        """
         try:
             if Path(path).exists():
                 with open(path, mode='r', encoding='utf-8') as file:
@@ -16,7 +26,6 @@ class FileHandler:
                         return data
                     elif file_extension == FileExtensions.JSON:
                         data = json.load(file)
-                        print(data)
                         return data
                     else:
                         raise InvalidFileTypeError("Invalid file extension detected!")
@@ -28,7 +37,15 @@ class FileHandler:
             print(f"InvalidFileTypeError caught! Exception: {e}")
 
     @staticmethod
-    def write_lines(path, lines):
+    def write_lines(path: str, lines: str):
+        """Write text on the file.
+
+        The function writes a text on the file in the given path. If the
+        file doesn't exist, it creates a new one.
+
+        :param path: string
+        :param lines: string
+        """
         try:
             with open(path, mode='a', encoding='utf-8') as file:
                 if isinstance(lines, str):
@@ -37,7 +54,3 @@ class FileHandler:
                     raise TypeError("Only str type accepted.")
         except TypeError as e:
             print(f"TypeError caught! Exception: {e}")
-
-
-file_handler = FileHandler()
-file_handler.write_lines("test.txt", "hello")
