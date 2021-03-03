@@ -14,6 +14,7 @@ class Auctioneer:
         self.bidders = []
         self._highest_bid = 0
         self._highest_bidder = None
+        self._previous_highest_bidder = "Starting Bid"
 
     def get_highest_bid(self):
         return self._highest_bid
@@ -21,8 +22,17 @@ class Auctioneer:
     def get_highest_bidder(self):
         return self._highest_bidder
 
+    def get_previous_highest_bidder(self):
+        return self._previous_highest_bidder
+
     def set_highest_bid(self, bid):
         self._highest_bid = bid
+
+    def set_highest_bidder(self, bidder):
+        self._highest_bidder = bidder
+
+    def set_previous_highest_bidder(self, bidder):
+        self._previous_highest_bidder = bidder
 
     def register_bidder(self, bidder):
         """
@@ -37,6 +47,11 @@ class Auctioneer:
         highest bid to 0.
         """
         self.bidders.clear()
+
+    def begin_auction(self):
+        while self.get_previous_highest_bidder() != self.get_highest_bidder():
+            self._notify_bidders()
+        print(f"\nThe winner of the auction is: {self.get_highest_bidder()} at {self.get_highest_bid()}")
 
     def _notify_bidders(self):
         """
@@ -55,12 +70,12 @@ class Auctioneer:
         :param bidder: The object with __call__(auctioneer) that placed
         the bid.
         """
-        print(f"{self._highest_bidder} bidded {bid} in response to "
-              f"{'Starting Bid' if self._highest_bidder is None else self._highest_bidder.name}'s"
+        print(f"{bidder.get_name()} bidded {bid} in response to "
+              f"{self.get_previous_highest_bidder()}'s "
               f"bid of {self.get_highest_bid()}!")
-        self._highest_bid = bid
-        self._highest_bidder = bidder.name
-        self._notify_bidders()
+        self.set_highest_bid(bid)
+        self.set_previous_highest_bidder(self.get_highest_bidder())
+        self.set_highest_bidder(bidder)
 
 
 class Bidder:
@@ -72,11 +87,17 @@ class Bidder:
         self.bid_increase_perc = bid_increase_perc
         self.highest_bid = 0
 
+    def get_name(self):
+        return self.name
+
+    def get_highest_bid(self):
+        return self.highest_bid
+
     def __call__(self, auctioneer):
         attempting_bid = auctioneer.get_highest_bid() * self.bid_increase_perc
         if auctioneer.get_highest_bidder() != self.name:
             if attempting_bid <= self.budget:
-                if round(random.random(), 2) == self.bid_probability:
+                if random.random() <= self.bid_probability:
                     self.highest_bid = attempting_bid
                     auctioneer.accept_bid(attempting_bid, self)
 
@@ -109,18 +130,23 @@ class Auction:
         """
         print(f"Auctioning {item} starting at {start_price}")
         self.auctioneer.set_highest_bid(start_price)
-        self.auctioneer._notify_bidders()
+        self.auctioneer.begin_auction()
 
+        auction_result = {x.get_name(): x.get_highest_bid() for x in self.auctioneer.bidders}
+
+        print("\nHighest Bids Per Bidder")
+        for x, y in auction_result.items():
+            print(f"Bidder: {x} Highest Bid: {y}")
 
 def main():
     bidders = []
 
     # Hardcoding the bidders.
-    bidders.append(Bidder("Jojo", 3000, round(random.random(), 2), 1.2))
-    bidders.append(Bidder("Melissa", 7000, round(random.random(), 2), 1.5))
-    bidders.append(Bidder("Priya", 15000, round(random.random(), 2), 1.1))
-    bidders.append(Bidder("Kewei", 800, round(random.random(), 2), 1.9))
-    bidders.append(Bidder("Scott", 4000, round(random.random(), 2), 2))
+    bidders.append(Bidder("Jojo", 3000, random.random(), 1.2))
+    bidders.append(Bidder("Melissa", 7000, random.random(), 1.5))
+    bidders.append(Bidder("Priya", 15000, random.random(), 1.1))
+    bidders.append(Bidder("Kewei", 800, random.random(), 1.9))
+    bidders.append(Bidder("Scott", 4000, random.random(), 2))
 
     print("\n\nStarting Auction!!")
     print("------------------")

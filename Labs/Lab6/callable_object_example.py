@@ -13,7 +13,7 @@ class AClass:
 def main():
     callable_object = AClass("You just used an object like a function!")
 
-    # callable_object.foo()
+    callable_object.foo()
 
     callable_object("Callable objects can also take in any parameters")
 
