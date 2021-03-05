@@ -11,27 +11,55 @@ class Auctioneer:
     """
 
     def __init__(self):
+        """
+        Initialize Auctioneer object.
+        All initial attributes are set by default.
+        """
         self.bidders = []
         self._highest_bid = 0
         self._highest_bidder = None
         self._previous_highest_bidder = "Starting Bid"
 
     def get_highest_bid(self):
+        """
+        Get highest bid
+        :return: float
+        """
         return self._highest_bid
 
     def get_highest_bidder(self):
+        """
+        Get highest bidder.
+        :return: Bidder object
+        """
         return self._highest_bidder
 
     def get_previous_highest_bidder(self):
+        """
+        Get previous highest bidder
+        :return: Bidder object
+        """
         return self._previous_highest_bidder
 
     def set_highest_bid(self, bid):
+        """
+        Set new highest bid.
+        :param bid: float
+        """
         self._highest_bid = bid
 
     def set_highest_bidder(self, bidder):
+        """
+        Set new current highest bidder.
+        :param bidder: Bidder object
+        """
         self._highest_bidder = bidder
 
     def set_previous_highest_bidder(self, bidder):
+        """
+        Set new previous highest bidder.
+        :param bidder: Bidder object
+        """
         self._previous_highest_bidder = bidder
 
     def register_bidder(self, bidder):
@@ -49,6 +77,9 @@ class Auctioneer:
         self.bidders.clear()
 
     def begin_auction(self):
+        """
+        Execute auction until there is no new bid.
+        """
         while self.get_previous_highest_bidder() != self.get_highest_bidder():
             self._notify_bidders()
         print(f"\nThe winner of the auction is: {self.get_highest_bidder()} at {self.get_highest_bid()}")
@@ -79,8 +110,18 @@ class Auctioneer:
 
 
 class Bidder:
+    """
+      Represents bidder
+    """
 
     def __init__(self, name, budget=100, bid_probability=0.35, bid_increase_perc=1.1):
+        """
+        Initialize a bidder.
+        :param name: string, name of bidder
+        :param budget: integer, biding budget
+        :param bid_probability: float, probability for bidding
+        :param bid_increase_perc: float, bid increase rate
+        """
         self.name = name
         self.bid_probability = bid_probability
         self.budget = budget
@@ -88,12 +129,24 @@ class Bidder:
         self.highest_bid = 0
 
     def get_name(self):
+        """
+        Get name of this bidder
+        :return: string, name of bidder
+        """
         return self.name
 
     def get_highest_bid(self):
+        """
+        Get highest bid amount of this bidder
+        :return: float, highest bid amount
+        """
         return self.highest_bid
 
     def __call__(self, auctioneer):
+        """
+        Execute bidding sequence.
+        :param auctioneer: Auctioneer object
+        """
         attempting_bid = auctioneer.get_highest_bid() * self.bid_increase_perc
         if auctioneer.get_highest_bidder() != self.name:
             if attempting_bid <= self.budget:
@@ -102,6 +155,10 @@ class Bidder:
                     auctioneer.accept_bid(attempting_bid, self)
 
     def __str__(self):
+        """
+        Print the object.
+        :return: a name of the bidder object
+        """
         return self.name
 
 
@@ -138,22 +195,79 @@ class Auction:
         for x, y in auction_result.items():
             print(f"Bidder: {x} Highest Bid: {y}")
 
+
+def add_bidder():
+    """
+    Create new bidder object and return it.
+    :return: Bidder object
+    """
+    name = input("\nEnter name of the bidder: ").title()
+    budget = int(input("Enter bidder budget: "))
+    bid_probability = float(input("Enter bid probability: "))
+    bid_increase_perc = float(input("Enter bid increase percentage: "))
+    return Bidder(name, budget, bid_probability, bid_increase_perc)
+
+
 def main():
+    """
+    The main of the program. Execute auction simulation.
+    """
     bidders = []
 
-    # Hardcoding the bidders.
-    bidders.append(Bidder("Jojo", 3000, random.random(), 1.2))
-    bidders.append(Bidder("Melissa", 7000, random.random(), 1.5))
-    bidders.append(Bidder("Priya", 15000, random.random(), 1.1))
-    bidders.append(Bidder("Kewei", 800, random.random(), 1.9))
-    bidders.append(Bidder("Scott", 4000, random.random(), 2))
+    print("\nWelcome to the auction menu!")
+    print("-----------------------")
 
-    print("\n\nStarting Auction!!")
-    print("------------------")
-    my_auction = Auction(bidders)
-    my_auction.simulate_auction("Antique Vase", 100)
+    try:
+        auction_item = input("Enter bid item: ").title()
+        starting_price = int(input("Enter starting price: "))
+
+        user_input = None
+        while user_input != 1 and user_input != 3 and user_input != 4:
+            print("\nChoose the following options")
+            print("-----------------------")
+            print("1. Use hard-coded bidders")
+            print("2. Add a custom bidders")
+            print("3. Start auction")
+            print("4. Quit")
+            string_input = input("Please enter your choice (1-3) ")
+
+            if string_input == '':
+                continue
+
+            user_input = int(string_input)
+
+            if user_input == 1:
+                # Hard-coding the bidders.
+                bidders.append(Bidder("Jojo", 3000, random.random(), 1.2))
+                bidders.append(Bidder("Melissa", 7000, random.random(), 1.5))
+                bidders.append(Bidder("Priya", 15000, random.random(), 1.1))
+                bidders.append(Bidder("Kewei", 800, random.random(), 1.9))
+                bidders.append(Bidder("Scott", 4000, random.random(), 2))
+            elif user_input == 2:
+                bidders.append(add_bidder())
+            elif user_input == 3:
+                pass
+            elif user_input == 4:
+                pass
+            else:
+                print("\nCould not process the input. Please enter a"
+                      " number from 1 - 3.")
+
+        if user_input != 4:
+            if len(bidders) != 0:
+                print("\n\nStarting Auction!!")
+                print("------------------")
+                my_auction = Auction(bidders)
+                my_auction.simulate_auction(auction_item, starting_price)
+            else:
+                print("\nAuction ended: No registered bidders")
+        else:
+            print("\nAuction ended")
+    except ValueError as e:
+        print(f"\nTypeError caught! Exception: {e}")
+    except KeyboardInterrupt:
+        print(f"\n\nProgram stopped!")
 
 
 if __name__ == '__main__':
     main()
-
