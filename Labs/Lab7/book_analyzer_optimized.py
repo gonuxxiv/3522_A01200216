@@ -34,12 +34,6 @@ class BookAnalyzer:
                 stripped_text += line.split()
         self.text = stripped_text
 
-        # # convert list of lines to list of words
-        # words = []
-        # for line in self.text:
-        #     words += line.split()
-        # self.text = words
-
         # count each word in the list to the dictionary
         temp_text = {}
         for word in self.text:
@@ -58,7 +52,6 @@ class BookAnalyzer:
                 temp_word = temp_word.replace(punctuation, '')
             temp_dict_words[temp_word] = self.text[word]
         self.text = temp_dict_words
-        print(self.text)
 
     # @staticmethod
     # def is_unique(word, word_list):
@@ -83,7 +76,6 @@ class BookAnalyzer:
         unique_words = []
         for x, y in temp_text.items():
             if y == 1:
-
                 unique_words.append(x)
         return unique_words
 
