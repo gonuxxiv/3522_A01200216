@@ -29,10 +29,21 @@ class ItemFactory(abc.ABC):
 
 
 class BookItemFactory(ItemFactory):
+    """
+    BookItemFactory class.
+    """
     def create_item(self, call_num: str,
                     title: str,
                     num_copies: int,
                     **kwargs) -> Book:
+        """
+        Creates a Book object.
+        :param call_num: a string
+        :param title: a string
+        :param num_copies: an int
+        :param kwargs: keyword args
+        :return: a Book object
+        """
         return Book(call_num,
                     title,
                     num_copies,
@@ -40,10 +51,21 @@ class BookItemFactory(ItemFactory):
 
 
 class DVDItemFactory(ItemFactory):
+    """
+    DVDItemFactory class.
+    """
     def create_item(self, call_num: str,
                     title: str,
                     num_copies: int,
                     **kwargs) -> DVD:
+        """
+        Creates a DVD object.
+        :param call_num: a string
+        :param title: a string
+        :param num_copies: an int
+        :param kwargs: keyword args
+        :return: a DVD object
+        """
         return DVD(call_num,
                    title,
                    num_copies,
@@ -52,10 +74,21 @@ class DVDItemFactory(ItemFactory):
 
 
 class JournalItemFactory(ItemFactory):
+    """
+    JournalItemFactory class.
+    """
     def create_item(self, call_num: str,
                     title: str,
                     num_copies: int,
                     **kwargs) -> Journal:
+        """
+        Creates a Journal object.
+        :param call_num: a string
+        :param title: a string
+        :param num_copies: an int
+        :param kwargs: keyword args
+        :return: a Journal object
+        """
         return Journal(call_num,
                        title,
                        num_copies,

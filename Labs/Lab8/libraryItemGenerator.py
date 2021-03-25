@@ -1,7 +1,4 @@
-from Labs.Lab8.book import Book
-from Labs.Lab8.dvd import DVD
-from Labs.Lab8.item_factory import ItemFactory, BookItemFactory, DVDItemFactory, JournalItemFactory
-from Labs.Lab8.journal import Journal
+from Labs.Lab8.item_factory import BookItemFactory, DVDItemFactory, JournalItemFactory
 
 
 class LibraryItemGenerator:
