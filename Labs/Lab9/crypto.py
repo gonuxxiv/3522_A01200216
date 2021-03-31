@@ -141,7 +141,7 @@ class EncryptionHandler(Crypto):
         elif request.input_file is not None:
             with open(request.input_file, mode='rb') as file:
                 lines = file.read()
-            encrypted_data = key.encrypt(lines)
+            encrypted_data = key.encrypt(lines, padding=True)
 
         if request.output != "print":
             with open(request.output, mode='wb+') as file:
@@ -166,18 +166,19 @@ class DecryptionHandler(Crypto):
 
         if request.data_input is not None:
             data = ast.literal_eval(request.data_input)
-            decrypted_data = key.decrypt(data)
+            decrypted_data = key.decrypt(data, padding=True)
         elif request.input_file is not None:
             with open(request.input_file, mode='rb') as file:
-                lines = file.read()
+                lines = file.readline()
             data = ast.literal_eval(str(lines))
-            decrypted_data = key.decrypt(data)
+            decrypted_data = key.decrypt(data, padding=True)
 
         if request.output != "print":
-            with open(request.output, mode='wb+') as file:
-                file.write(decrypted_data)
+            with open(request.output, mode='w+') as file:
+                data = str(decrypted_data)[2:-1]
+                file.write(data)
         else:
-            print(decrypted_data)
+            print(str(decrypted_data)[2:-1])
 
 
 def main(request: Request):
@@ -192,5 +193,5 @@ def main(request: Request):
 
 
 if __name__ == '__main__':
-    request = setup_request_commandline()
-    main(request)
+    req = setup_request_commandline()
+    main(req)
