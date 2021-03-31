@@ -100,7 +100,6 @@ class Crypto(abc.ABC):
         self.encryption_start_handler = None
         self.decryption_start_handler = None
 
-    @abc.abstractmethod
     def execute_request(self, request: Request):
         """
         Execute requested data.
@@ -132,21 +131,24 @@ class EncryptionHandler(Crypto):
         Execute requested data for an encryption.
         :param request: Request object
         """
-        key = des.DesKey(b"" + request.key)
+        byte_key = bytes(request.key, encoding='utf-8')
+        key = des.DesKey(byte_key)
         encrypted_data = None
 
         if request.data_input is not None:
-            encrypted_data = key.encrypt(b"" + request.data_input)
+            byte_data = bytes(request.data_input, encoding='utf-8')
+            encrypted_data = key.encrypt(byte_data, padding=True)
         elif request.input_file is not None:
             with open(request.input_file, mode='rb') as file:
                 lines = file.read()
-            encrypted_data = key.encrypt(b"" + lines)
+            encrypted_data = key.encrypt(lines)
 
         if request.output != "print":
             with open(request.output, mode='wb+') as file:
                 file.write(encrypted_data)
         else:
             print(encrypted_data)
+        print(encrypted_data)
 
 
 class DecryptionHandler(Crypto):
@@ -158,17 +160,18 @@ class DecryptionHandler(Crypto):
         Execute requested data for a decryption.
         :param request: Request object
         """
-        key = des.DesKey(b"" + request.key)
+        byte_key = bytes(request.key, encoding='utf-8')
+        key = des.DesKey(byte_key)
         decrypted_data = None
 
         if request.data_input is not None:
             data = ast.literal_eval(request.data_input)
-            decrypted_data = key.decrypt(b"" + data)
+            decrypted_data = key.decrypt(data)
         elif request.input_file is not None:
             with open(request.input_file, mode='rb') as file:
                 lines = file.read()
-            data = ast.literal_eval(lines)
-            decrypted_data = key.encrypt(b"" + data)
+            data = ast.literal_eval(str(lines))
+            decrypted_data = key.decrypt(data)
 
         if request.output != "print":
             with open(request.output, mode='wb+') as file:
@@ -182,12 +185,10 @@ def main(request: Request):
 
     if request.encryption_state == CryptoMode.EN:
         crypto.set_encryption_handler(EncryptionHandler())
-        data = crypto.encryption_start_handler.execute_request(request)
-        print(data)
+        crypto.encryption_start_handler.execute_request(request)
     elif request.encryption_state == CryptoMode.DE:
         crypto.set_decryption_handler(DecryptionHandler())
-        data = crypto.decryption_start_handler.execute_request(request)
-        print(data)
+        crypto.decryption_start_handler.execute_request(request)
 
 
 if __name__ == '__main__':
