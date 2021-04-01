@@ -89,7 +89,7 @@ def setup_request_commandline() -> Request:
         quit()
 
 
-class Crypto(abc.ABC):
+class Crypto:
     """
     Crypto class.
     """
@@ -97,32 +97,127 @@ class Crypto(abc.ABC):
         """
         Initialize Crypto class.
         """
-        self.encryption_start_handler = None
-        self.decryption_start_handler = None
+        print("\n\n--------- Setting up handlers ----------\n")
+        encryption_handler = EncryptionHandler()
+        decryption_handler = DecryptionHandler()
+        encryption_validate_key = ValidateKeyHandler()
+        encryption_validate_data = ValidateDataHandler()
+        encryption_output = ValidateOutputHandler()
+        decryption_validate_key = ValidateKeyHandler()
+        decryption_validate_data = ValidateDataHandler()
+        decryption_output = ValidateOutputHandler()
+
+        # set up order
+        encryption_validate_key.set_handler(encryption_validate_data)
+        encryption_validate_data.set_handler(encryption_output)
+        encryption_output.set_handler(encryption_handler)
+
+        decryption_validate_key.set_handler(decryption_validate_data)
+        decryption_validate_data.set_handler(decryption_output)
+        decryption_output.set_handler(decryption_handler)
+
+        self.encryption_start_handler = encryption_validate_key
+        self.decryption_start_handler = decryption_validate_key
 
     def execute_request(self, request: Request):
+        """
+        Set up appropriate handler to execute request.
+        :param request: Request object
+        """
+        if request.encryption_state == CryptoMode.EN:
+            self.encryption_start_handler.execute_request(request)
+        elif request.encryption_state == CryptoMode.DE:
+            self.decryption_start_handler.execute_request(request)
+
+
+class BaseCryptoHandler(abc.ABC):
+    """
+    BaseCryptoHandler class, a base class for handling encryption/decryption.
+    """
+    def __init__(self, next_handler=None):
+        """
+        Initialize BaseCryptoHandler class.
+        :param next_handler: next handler
+        """
+        self.next_handler = next_handler
+
+    @abc.abstractmethod
+    def execute_request(self, request: Request) -> bool:
         """
         Execute requested data.
         :param request: Request object
         """
         pass
 
-    def set_encryption_handler(self, handler):
+    def set_handler(self, handler):
         """
-        Set encryption_start_handler.
-        :param handler: EncryptionHandler object
+        Set new handler.
+        :param handler: next handler class
         """
-        self.encryption_start_handler = handler
-
-    def set_decryption_handler(self, handler):
-        """
-        Set decryption_start_handler.
-        :param handler: DecryptionHandler object
-        """
-        self.decryption_start_handler = handler
+        self.next_handler = handler
 
 
-class EncryptionHandler(Crypto):
+class ValidateKeyHandler(BaseCryptoHandler):
+    """
+    ValidateKeyHandler class.
+    """
+    def execute_request(self, request: Request) -> bool:
+        """
+        Validates key for the data.
+        :param request: Request object
+        :return: True if it's the end of the chain, False if something went wrong
+        """
+        print("Handler is validating key")
+        if request.key is not None:
+            if not self.next_handler:
+                return True
+            return self.next_handler.execute_request(request)
+        else:
+            print("Key is not valid")
+            return False
+
+
+class ValidateDataHandler(BaseCryptoHandler):
+    """
+    ValidateDataHandler class.
+    """
+    def execute_request(self, request: Request):
+        """
+        Validates Data of the data.
+        :param request: Request object
+        :return: True if it's the end of the chain, False if something went wrong
+        """
+        print("Handler is validating data")
+        if request.data_input is not None or request.input_file is not None:
+            if not self.next_handler:
+                return True
+            return self.next_handler.execute_request(request)
+        else:
+            print("Data is not validated")
+            return False
+
+
+class ValidateOutputHandler(BaseCryptoHandler):
+    """
+    ValidateOutputHandler class.
+    """
+    def execute_request(self, request: Request):
+        """
+        Validates output for the data.
+        :param request: Request object
+        :return: True if it's the end of the chain, False if something went wrong
+        """
+        print("Handler is validating output")
+        if request.output is not None:
+            if not self.next_handler:
+                return True
+            return self.next_handler.execute_request(request)
+        else:
+            print("Output is not validated")
+            return False
+
+
+class EncryptionHandler(BaseCryptoHandler):
     """
     EncryptionHandler class.
     """
@@ -131,11 +226,12 @@ class EncryptionHandler(Crypto):
         Execute requested data for an encryption.
         :param request: Request object
         """
-        byte_key = bytes(request.key, encoding='utf-8')
+        print("Handler is executing encryption")
+        byte_key = bytes(request.key, encoding='utf-8')  # get key handler
         key = des.DesKey(byte_key)
         encrypted_data = None
 
-        if request.data_input is not None:
+        if request.data_input is not None:  # read data handler
             byte_data = bytes(request.data_input, encoding='utf-8')
             encrypted_data = key.encrypt(byte_data, padding=True)
         elif request.input_file is not None:
@@ -143,15 +239,18 @@ class EncryptionHandler(Crypto):
                 lines = file.read()
             encrypted_data = key.encrypt(lines, padding=True)
 
-        if request.output != "print":
+        if request.output != "print":  # output handler
             with open(request.output, mode='wb+') as file:
                 file.write(encrypted_data)
+            print("\nEncrypted data is saved in a file.")
         else:
+            print("\nEncrypted Data:")
             print(encrypted_data)
-        print(encrypted_data)
+
+        return True
 
 
-class DecryptionHandler(Crypto):
+class DecryptionHandler(BaseCryptoHandler):
     """
     DecryptionHandler class.
     """
@@ -160,6 +259,7 @@ class DecryptionHandler(Crypto):
         Execute requested data for a decryption.
         :param request: Request object
         """
+        print("Handler is executing decryption")
         byte_key = bytes(request.key, encoding='utf-8')
         key = des.DesKey(byte_key)
         decrypted_data = None
@@ -177,19 +277,17 @@ class DecryptionHandler(Crypto):
             with open(request.output, mode='w+') as file:
                 data = str(decrypted_data)[2:-1]
                 file.write(data)
+            print("\nDecrypted data is saved in a file.")
         else:
+            print("\nDecrypted Data:")
             print(str(decrypted_data)[2:-1])
+
+        return True
 
 
 def main(request: Request):
     crypto = Crypto()
-
-    if request.encryption_state == CryptoMode.EN:
-        crypto.set_encryption_handler(EncryptionHandler())
-        crypto.encryption_start_handler.execute_request(request)
-    elif request.encryption_state == CryptoMode.DE:
-        crypto.set_decryption_handler(DecryptionHandler())
-        crypto.decryption_start_handler.execute_request(request)
+    crypto.execute_request(request)
 
 
 if __name__ == '__main__':
