@@ -150,23 +150,28 @@ class ISSDataRequest:
         return overhead_times
 
 
-if __name__ == "__main__":
-    data = ISSDataRequest()
-    file = pandas.read_excel("city_locations_test.xlsx")
-    cities = []
-    overhead_times = []
+# if __name__ == "__main__":
+#     data = ISSDataRequest()
+#     file = pandas.read_excel("city_locations_test.xlsx")
+#     cities = []
+#     overhead_times = []
+#     overhead_queue = CityOverheadTimeQueue()
+#
+#     for index, row in file.iterrows():
+#         city_name = row['city_ascii']
+#         lat = row['lat']
+#         lng = row['lng']
+#         cities.append(City(city_name, lat, lng))
+#
+#     for city in cities:
+#         overhead_times.append(data.get_overhead_pass(city))
+#
+#     for overhead in overhead_times:
+#         overhead_queue.put(overhead)
+#
+#     print(overhead_queue)
 
-    for index, row in file.iterrows():
-        city_name = row['city_ascii']
-        lat = row['lat']
-        lng = row['lng']
-        cities.append(City(city_name, lat, lng))
 
-    for city in cities:
-        overhead_times.append(data.get_overhead_pass(city))
-
-    for overhead in overhead_times:
-        print(overhead)
 
 
 
