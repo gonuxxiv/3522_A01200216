@@ -137,9 +137,6 @@ def main():
     producer_thread3 = ProducerThread(city3, overhead_queue, 3)
     consumer_thread = ConsumerThread(overhead_queue)
 
-    # with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
-    #     for index in range(1, 4):
-    #         executor.submit(producer_thread.run, index)
     thread1 = threading.Thread(target=producer_thread.run)
     thread2 = threading.Thread(target=producer_thread2.run)
     thread3 = threading.Thread(target=producer_thread3.run)
